@@ -9,6 +9,12 @@ files = os.listdir(os.getcwd())
 
 for x in files:
     if ".json" in x:
-        shutil.move(x , os.path.join(os.getcwd() , "nlp_dataset_json"))
+        try:
+            shutil.move(x , os.path.join(os.getcwd() , "nlp_dataset_json"))
+        except Exception as e:
+            os.remove(os.path.join(os.getcwd(), x))
+            print(e)
+            
+        
 
 
