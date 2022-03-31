@@ -1,6 +1,3 @@
-'''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'''
-'''05d239c02385adfda446f53cee763986feb9fadb'''
-
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 

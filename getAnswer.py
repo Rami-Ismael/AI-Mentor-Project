@@ -9,7 +9,7 @@ headers = {'Authorization': 'bearer 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'}
 query = """
 query ($name_of_repository: String = "PyTorchLightning", $name: String = "pytorch-lightning") {
   repository(owner: $name_of_repository, name: $name) {
-    discussions(orderBy: {field: CREATED_AT, direction: DESC}, first: 100) {
+    discussions(orderBy: {field: CREATED_AT, direction: DESC}, first: 10) {
       totalCount
       edges {
         node {
@@ -26,7 +26,7 @@ query ($name_of_repository: String = "PyTorchLightning", $name: String = "pytorc
   }
 }
 """
-time.sleep(1)
+time.sleep(3)
 variables = {
 "name_of_repository":"PyTorchLightning",
   "name":"pytorch-lightning"
@@ -37,7 +37,8 @@ print("The endpoint was made with the following parameters:")
 data = endpoint(query , variables)
 print(data)
 print(data.keys())
-nodes = data["data"]["repository"]["discussions"]["edges"]["nodes"]
-for x in range(len(nodes)):
+edges = data["data"]["repository"]["discussions"]["edges"]
+print("The edges" , edges)
+for x in range(len(edges)):
   with open(f"discussion_answer_{x}.json" , "w") as outfile:
-    json.dump(nodes[x] , outfile)
+    json.dump(edges[x] , outfile)
