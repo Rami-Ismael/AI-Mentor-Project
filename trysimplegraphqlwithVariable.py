@@ -1,3 +1,4 @@
+import json
 from sgqlc.endpoint.http import HTTPEndpoint
 import time
 from dotenv import load_dotenv
@@ -35,4 +36,7 @@ endpoint = HTTPEndpoint(url, headers)
 print("The endpoint was made with the following parameters:")
 time.sleep(2)
 data = endpoint(query , variables)
-print(data)
+os.makedirs('discussion_dataset', exist_ok=True)
+for idx , element in enumerate( data['data']['repository']['discussions']['nodes']):
+  with open(f"discussion_dataset/dicussion_data{idx}.json" , "w") as outfile:
+    json.dump(element , outfile)
