@@ -61,38 +61,48 @@ for x in data["data"]["repository"]['discussions']['nodes']:
 
 print(f"The min number is {min_number}")
 print(f"The max number is {max_number}")
-## get the dicussion in the processes
-for x in range(min_number , max_number):
-  query = """
-  query ($name_of_repository: String = "PyTorchLightning", $name: String = "pytorch-lightning", $number: Int = 5) {
-    repository(owner: $name_of_repository, name: $name) {
-      discussion(number: $number) {
-        id
-        title
+query = """
+query ($name_of_repository: String = "PyTorchLightning", $name: String = "pytorch-lightning", $number: Int = 5) {
+  repository(owner: $name_of_repository, name: $name) {
+    discussion(number: $number) {
+      id
+      title
+      bodyText
+      createdAt
+      databaseId
+      number
+      publishedAt
+      answer {
         bodyText
-        answer {
-          bodyText
-          isAnswer
-        }
+        isAnswer
+        lastEditedAt
+        upvoteCount
+        url
       }
     }
   }
-  """
-  variables = {
-  "name_of_repository":"PyTorchLightning",
-  "name":"pytorch-lightning",
-  "number":x
-  }
-  time.sleep(5)
-  #print("The endpoint was made with the following parameters:")
-  data = endpoint(query , variables)
-  print(data["data"]["repository"]["discussion"])
-  os.makedirs('discussion_dataset', exist_ok=True)
-  if data["data"]["repository"]["discussion"] is None:
-    continue
-  else:
-    with open(f"discussion_dataset/dicussion_data{x}.json" , "w") as outfile:
-      json.dump(data["data"]["repository"]["discussion"] , outfile)
+}
+"""
+## get the dicussion in the processes
+for x in range(min_number , max_number+1):
+  try:
+    variables = {
+    "name_of_repository":"PyTorchLightning",
+    "name":"pytorch-lightning",
+    "number":x
+    }
+    time.sleep(2)
+    #print("The endpoint was made with the following parameters:")
+    data = endpoint(query , variables)
+    print(data["data"]["repository"]["discussion"])
+    os.makedirs('discussion_dataset', exist_ok=True)
+    if data["data"]["repository"]["discussion"] is None:
+      continue
+    else:
+      with open(f"discussion_dataset/dicussion_data{x}.json" , "w") as outfile:
+        json.dump(data["data"]["repository"]["discussion"] , outfile)
+  except:
+    print("The endpoint was made with the following {x} does not work")
   
   
   
