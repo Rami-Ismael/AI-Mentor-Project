@@ -37,7 +37,7 @@ else:
 label_keys = {}
 ## create a method that will get the number of issue a respository have
 number_of_permittted_404_error = 2000
-for x in range(12000 , 20000):
+for x in range(20000 , 0):
     try:
         time.sleep(2)
         
@@ -51,12 +51,21 @@ for x in range(12000 , 20000):
             with open(f"data_{x}.json" , "w") as outfile:
                 json.dump(response , outfile)
             print(f"At {x} success api call")
-            pprint(response["labels"]["id"])
-            print(response["labels"]["name"])
-            label_keys[response["labels"]["id"]] = response["labels"]["name"]
-            tf = open("myDictionary.json", "w")
-            json.dump(label_keys,tf)
-            tf.close()
+            print(response["labels"])
+            for label in response["labels"]:
+                label_keys[label["id"]] = label["name"]
+            # create json object from dictionary
+            json = json.dumps(label_keys)
+            print(json)
+
+            # open file for writing, "w" 
+            f = open("dict.json","w")
+
+            # write json object to file
+            f.write(json)
+
+            # close file
+            f.close()
             
         elif response.status_code == 404:
             print(f"At {x} the response is 404 and the status code is {response.status_code}")
