@@ -1,4 +1,6 @@
+from cProfile import label
 import json
+import pickle
 from traceback import print_tb
 from urllib import request
 from xmlrpc import client
@@ -7,6 +9,9 @@ import sys
 import os
 from dotenv import load_dotenv
 import time
+## rich pretty print
+from rich.pretty import pprint
+pprint(locals())
 
 load_dotenv()
 client_id = os.getenv("CLIENT_ID")
@@ -29,6 +34,7 @@ if request.status_code == 200:
     print("Repository exist")
 else:
     print("Repository does not exist")
+label_keys = {}
 ## create a method that will get the number of issue a respository have
 number_of_permittted_404_error = 2000
 for x in range(12000 , 20000):
@@ -45,6 +51,13 @@ for x in range(12000 , 20000):
             with open(f"data_{x}.json" , "w") as outfile:
                 json.dump(response , outfile)
             print(f"At {x} success api call")
+            pprint(response["labels"]["id"])
+            print(response["labels"]["name"])
+            label_keys[response["labels"]["id"]] = response["labels"]["name"]
+            tf = open("myDictionary.json", "w")
+            json.dump(label_keys,tf)
+            tf.close()
+            
         elif response.status_code == 404:
             print(f"At {x} the response is 404 and the status code is {response.status_code}")
             if number_of_permittted_404_error == 0:
@@ -57,3 +70,5 @@ for x in range(12000 , 20000):
             print(f"At {x} the response is negative and the status code is {response.status_code}")
     except:
         print(f"At {x} fault api call")
+with open("myDictionary.pkl", "wb") as tf:
+    pickle.dump(label_keys, tf)

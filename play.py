@@ -1,13 +1,9 @@
-import os
-from plistlib import load
-from dotenv import load_dotenv
-import requests
-load_dotenv()
+import pickle
+name = {"name":"rami"}
+print(name)
+print(name["name"])
+print(type(name))
+with open("myDictionary.pkl", "wb") as tf:
+    new_dict = pickle.load(tf)
 
-secret_key = os.getenv("CLIENT_SECRET")
-
-print(secret_key)
-
-for x in range(10):
-    print(x)
-    break
+print(new_dict)
